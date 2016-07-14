@@ -6,7 +6,27 @@
 //  Copyright (c) 2016 mitchell hudson. All rights reserved.
 //
 
+
+/*
+ 
+ This example shows how to connect two objects with a limit joint. 
+ In this example the limit is set to 200pt. The joint forces the 
+ objects to stay within 200 points of each other.
+ 
+ */
+
+
+
 import SpriteKit
+
+
+struct PhysicsCategory {
+    static let None: UInt32     = 0
+    static let Box: UInt32      = 0b1
+    static let Edge: UInt32     = 0b10
+}
+
+
 
 class GameScene: SKScene {
     
@@ -19,6 +39,8 @@ class GameScene: SKScene {
         /* Setup your scene here */
         
         physicsBody = SKPhysicsBody(edgeLoopFromRect: view.frame)
+        physicsBody?.categoryBitMask = PhysicsCategory.Edge
+        physicsBody?.collisionBitMask = PhysicsCategory.Box
         
         let boxSize = CGSize(width: 60, height: 60)
         boxA = SKSpriteNode(color: UIColor.orangeColor(), size: boxSize)
@@ -35,6 +57,12 @@ class GameScene: SKScene {
         
         boxA.physicsBody = SKPhysicsBody(rectangleOfSize: boxSize)
         boxB.physicsBody = SKPhysicsBody(rectangleOfSize: boxSize)
+        
+        boxA.physicsBody?.categoryBitMask = PhysicsCategory.Box
+        boxB.physicsBody?.categoryBitMask = PhysicsCategory.Box
+        
+        boxA.physicsBody?.collisionBitMask = PhysicsCategory.Edge | PhysicsCategory.Box
+        boxB.physicsBody?.collisionBitMask = PhysicsCategory.Edge | PhysicsCategory.Box
         
         boxA.name = "box"
         boxB.name = "box"
